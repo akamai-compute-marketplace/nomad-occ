@@ -1,0 +1,12 @@
+# roles/common/handlers
+
+- name: restart ssh
+  systemd:
+    name: ssh
+    state: restarted
+    enabled: yes
+
+- name: restart firewalld
+  systemd:
+    name: firewalld
+    state: restarted

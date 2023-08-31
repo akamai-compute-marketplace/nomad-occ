@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zone>
+  <short>Nomad Cluster</short>
+  <description>Nomad Cluster GOSSIP</description>
+  <service name="ssh"/>
+  <service name="mdns"/>
+  <service name="samba-client"/>
+  <service name="dhcpv6-client"/>
+  <port port="4648" protocol="udp"/>
+  <port port="4648" protocol="tcp"/>
+  <port port="4647" protocol="udp"/>
+  <port port="4647" protocol="tcp"/>
+  <port port="4646" protocol="tcp"/>
+  <port port="8600" protocol="tcp"/>
+  <port port="8600" protocol="udp"/>
+  <port port="8500" protocol="tcp"/>
+  <port port="8301" protocol="tcp"/>
+  <port port="8301" protocol="udp"/>
+  <port port="8302" protocol="tcp"/>
+  <port port="8302" protocol="udp"/>
+  <port port="8300" protocol="tcp"/>
+  <source address="192.168.128.0/17"/>
+  <forward/>
+</zone>

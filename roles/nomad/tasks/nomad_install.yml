@@ -1,0 +1,19 @@
+---
+- name: creating nomad data dir
+  ansible.builtin.file:
+    path: /opt/nomad
+    state: directory
+    mode: '0755'
+
+- name: install nomad package
+  apt: 
+    name: nomad
+    state: present
+
+- name: move systemd files
+  ansible.builtin.copy:
+    src: files/nomad.service 
+    dest: /etc/systemd/system/nomad.service
+    owner: root
+    group: root
+    mode: '0664'

@@ -1,0 +1,62 @@
+---
+- name: wait for nomad to elect leader
+  ansible.builtin.pause: 
+    minutes: 2
+  run_once: true
+  delegate_to: localhost
+
+- name: bootstrap nomad
+  ansible.builtin.shell: nomad acl bootstrap
+  register: result
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"
+
+- name: set nomad bootstrap token fact 
+  ansible.builtin.set_fact: 
+    nomad_bootstrap_token: "{{ result.stdout | regex_search('Secret ID    =\\s+(\\S+)', '\\1') }}"
+    cacheable: yes
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"
+
+- name: write to vars to validate play
+  ansible.builtin.lineinfile: 
+     path: /tmp/linode/group_vars/nomad/vars
+     insertafter: EOF
+     line: 'nomad_bootstrap_token: {{ nomad_bootstrap_token[0] }}'
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"
+
+- name: apply nomad acl policy
+  ansible.builtin.shell: nomad acl policy apply -token "{{ nomad_bootstrap_token[0] }}" 
+    -description "Policy to allow reading of agents and nodes and listing and submitting jobs in all namespaces." 
+    node-read-job-submit /ops/shared/config/nomad-acl-user.hcl
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"
+
+- name: create nomad user token 
+  ansible.builtin.shell: nomad acl token create -token "{{ nomad_bootstrap_token[0] }}" 
+    -name "read-token" -policy node-read-job-submit
+  register: result
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"
+
+- name: set nomad user token fact 
+  ansible.builtin.set_fact: 
+    nomad_user_token: "{{ result.stdout | regex_search('Secret ID    =\\s+(\\S+)', '\\1') }}"
+    cacheable: yes
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"
+
+- name: write to vars to validate play
+  ansible.builtin.lineinfile: 
+     path: /tmp/linode/group_vars/nomad/vars
+     insertafter: EOF
+     line: 'nomad_user_token: {{ nomad_user_token }}'
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"
+
+- name: write nomad user token to consul KV
+  ansible.builtin.shell: consul kv put -token={{ consul_bootstrap_token[0] }} 
+    nomad_user_token {{ nomad_user_token[0] }}
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"

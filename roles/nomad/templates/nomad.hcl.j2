@@ -1,0 +1,25 @@
+data_dir  = "/opt/nomad/data"
+bind_addr = "0.0.0.0"
+
+# Enable the server
+server {
+  enabled          = true
+  bootstrap_expect = {{ servers }}
+}
+
+consul {
+  address = "127.0.0.1:8500"
+  token = "{{ consul_nomad_autojoin_token[0] }}"
+}
+
+acl {
+  enabled = true
+}
+
+vault {
+  enabled          = false
+  address          = "http://active.vault.service.consul:8200"
+  task_token_ttl   = "1h"
+  create_from_role = "nomad-cluster"
+  token            = ""
+}

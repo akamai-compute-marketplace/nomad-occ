@@ -1,0 +1,23 @@
+---
+# roles/post/tasks/creds.yml
+
+- name: writing deployment credentils locally
+  blockinfile:
+    path: "/home/{{ sudo_username }}/.deployment-secrets.txt"
+    create: yes
+    owner: "{{ sudo_username }}"
+    group: "{{ sudo_username }}"
+    mode: 0644    
+    block: |
+      # system user 
+      
+      user: {{ sudo_username }}
+      password: {{ sudo_username_pass }}
+      
+      # hashi tokens 
+      consul_bootstrap_token: {{ consul_bootstrap_token[0] }}
+      consul_nomad_autojoin_token: {{ consul_nomad_autojoin_token[0] }}
+      nomad_bootstrap_token: {{ nomad_bootstrap_token[0] }}
+      nomad_user_token: {{ nomad_user_token[0] }}
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"

@@ -1,0 +1,29 @@
+--- 
+- name: creating nomad config dir
+  ansible.builtin.file: 
+    path: /etc/nomad.d
+    state: directory 
+    mode: '0755'
+
+# only on servers. Client's is different
+- name: moving nomad.hcl
+  template: 
+    src: templates/nomad.hcl.j2
+    dest: /etc/nomad.d/nomad.hcl
+    owner: root
+    group: root
+    mode: '0755'
+  run_once: true
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['nomad_cluster'] }}" 
+
+- name: moving nomad user acl
+  ansible.builtin.copy:
+    src: files/nomad-acl-user.hcl
+    dest: /ops/shared/config/nomad-acl-user.hcl
+    owner: root
+    group: root
+    mode: '0664'
+  run_once: true
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['nomad_cluster'] }}"

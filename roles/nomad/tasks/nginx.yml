@@ -1,0 +1,57 @@
+--- 
+- name: setting RDNS
+  set_fact:
+    rdns: "{{ lookup('community.general.dig', '{{ nomad_data.server[0].instance.ip_pub1 }}/PTR') }}"
+
+- name: install nginx & certbot
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - nginx
+    - certbot
+    - python3-certbot-nginx
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"
+
+- name: enabling nginx on boot
+  service:
+    name: nginx
+    enabled: yes
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"
+
+- name: disable nginx default site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"
+
+- name: moving vhost_default template
+  template:
+    src: templates/vhost.conf.j2
+    dest: "/etc/nginx/sites-available/nomad.conf"
+    owner: root
+    group: root
+    mode: 0644
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"
+
+- name: symlinking our vhost
+  file:
+    src: "/etc/nginx/sites-available/nomad.conf"
+    dest: "/etc/nginx/sites-enabled/nomad.conf"
+    owner: root
+    group: root
+    mode: 0644
+    state: link
+  notify: reload nginx
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"
+
+- name: run certbot
+  shell:
+    cmd: "certbot -n --nginx --agree-tos --redirect -d {{ rdns }} -m {{ email_address }}"
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"

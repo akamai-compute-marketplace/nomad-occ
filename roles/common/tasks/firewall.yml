@@ -1,0 +1,26 @@
+---
+
+- name: installing firewalld
+  apt:
+    name: firewalld
+    state: present
+
+- name: updating firewalld.conf file
+  lineinfile:
+    path: /etc/firewalld/firewalld.conf
+    regexp: '^IndividualCalls=no'
+    line: IndividualCalls=yes
+  notify: restart firewalld
+
+- name: configure firewall on nomad cluster
+  ansible.builtin.copy:
+    src: files/firewall_cluster.xml
+    dest: /etc/firewalld/zones/cluster_firewall.xml
+    owner: root
+    group: root
+    mode: 0664
+
+- name: restart firewalld
+  systemd:
+    name: firewalld
+    state: restarted

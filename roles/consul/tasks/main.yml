@@ -1,0 +1,12 @@
+--- 
+- name: install consul 
+  import_tasks: consul_install.yml
+
+- name: configure consul
+  import_tasks: consul_config.yml 
+
+- name: run consul 
+  import_tasks: consul_run.yml
+
+- name: bootstrap consul ACLs
+  import_tasks: consul_bootstrap.yml

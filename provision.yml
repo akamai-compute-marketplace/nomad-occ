@@ -1,0 +1,114 @@
+- name: configuring environment
+  hosts: localhost
+  connection: local
+  vars_files:
+      - group_vars/nomad/vars
+      - group_vars/nomad/secret_vars
+  
+  vars:
+    count: '{{ servers - 1 }}' # UDF
+    clients: '{{ clients }}'
+       
+  tasks:
+
+  - name: creating nomad cluster
+    linode.cloud.instance:
+      label: '{{ instance_prefix }}-server-{{ item | int + 1 }}-{{ uuid }}'
+      api_token: '{{ api_token }}'
+      type: '{{ type }}'
+      region: '{{ region }}'
+      image: '{{ image }}'
+      root_pass: '{{ root_pass }}'
+      authorized_keys: '{{ ssh_keys }}'
+      private_ip: true
+      stackscript_id: '1226546' 
+      ua_prefix: 'markeplace-nomad-occ'      
+      state: present
+    with_sequence: count='{{ count }}'
+
+  - name: creating nomad clients
+    linode.cloud.instance:
+      label: '{{ instance_prefix }}-client-{{ item | int }}-{{ uuid }}'
+      api_token: '{{ api_token }}'
+      type: '{{ type }}'
+      region: '{{ region }}'
+      image: '{{ image }}'
+      root_pass: '{{ root_pass }}'
+      authorized_keys: '{{ ssh_keys }}'
+      private_ip: true
+      stackscript_id: '1226546'
+      ua_prefix: 'markeplace-nomad-occ'      
+      state: present
+    with_sequence: count='{{ clients }}'
+
+  - name: get info about the client instances
+    linode.cloud.instance_info:
+      api_token: '{{ api_token }}'
+      label: '{{ instance_prefix }}-client-{{ item | int }}-{{ uuid }}'
+    register: client_info
+    with_sequence: count='{{ clients }}'
+
+  - name: get info about the server instances
+    linode.cloud.instance_info:
+      api_token: '{{ api_token }}'
+      label: '{{ instance_prefix }}-server-{{ item | int }}-{{ uuid }}'
+    register: server_info
+    with_sequence: count='{{ servers }}'
+
+  - name: update group_vars with server variables
+    blockinfile:
+      path: ./group_vars/nomad/vars
+      marker: "# {mark} INSTANCE VARS"
+      block: |
+        #jinja2: trim_blocks:False
+        nomad_data:
+          server:
+            {%- for count in range(servers) %}
+            - nomad-server-{{ count + 1 }}:
+              instance:
+                hostname: {{ server_info.results[count].instance.label | replace('_', '-') }}
+                ip_pub1: {{ server_info.results[count].instance.ipv4[0] }}
+                ip_priv1: {{ server_info.results[count].instance.ipv4[1] }}
+            {%- endfor %}        
+          client:
+            {%- for count in range(clients) %}
+            - nomad-client-{{ count + 1 }}:
+              instance:
+                hostname: {{ client_info.results[count].instance.label | replace('_', '-') }}
+                ip_pub1: {{ client_info.results[count].instance.ipv4[0] }}
+                ip_priv1: {{ client_info.results[count].instance.ipv4[1] }}
+            {%- endfor %}
+
+  - name: test connectivity
+    ping: 
+    with_items: "{{ item.instance.ipv4[0] }}"
+    loop: 
+    - "{{ client_info.results }}"
+    - "{{ server_info.results }}"
+
+  - name: update inventory
+    blockinfile:
+      path: ./hosts
+      marker: "# {mark} NOMAD LINODES"
+      block: |
+        #jinja2: trim_blocks:False
+        [nomad_cluster]
+        localhost ansible_connection=local user=root
+        {%- for count in range(servers - 1) %}
+        {{ server_info.results[count + 1].instance.ipv4[0] }}
+        {%- endfor %}
+        [nomad_client]
+        {%- for count in range(clients) %}
+        {{ client_info.results[count].instance.ipv4[0] }}
+        {%- endfor %}
+
+  - name: wait for port 22 to become open
+    wait_for:
+      port: 22
+      host: '{{ item.instance.ipv4[0] }}'
+      search_regex: OpenSSH
+      delay: 10
+    connection: local
+    with_items: 
+    - "{{ client_info.results }}"
+    - "{{ server_info.results }}"

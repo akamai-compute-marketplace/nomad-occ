@@ -1,0 +1,35 @@
+---
+- name: Add HashiCorp GPG key
+  ansible.builtin.get_url:
+    url: https://apt.releases.hashicorp.com/gpg
+    dest: /etc/apt/trusted.gpg.d/hashicorp.gpg.asc
+    mode: '0644'
+    force: true
+
+- name: Add Docker repo
+  ansible.builtin.apt_repository:
+    filename: example-repo
+    repo: 'deb [signed-by=/etc/apt/trusted.gpg.d/hashicorp.gpg.asc] https://apt.releases.hashicorp.com/gpg jammy main'
+
+- name: update repos 
+  apt:
+    update_cache: yes 
+
+- name: creating consul data dir
+  file:
+    path: /opt/consul
+    state: directory
+    mode: '0755'
+
+- name: install consul package
+  apt: 
+    name: consul
+    state: present
+
+- name: move systemd service files
+  ansible.builtin.copy: 
+    src: ../files/consul.service
+    dest: /etc/systemd/system/consul.service 
+    owner: root
+    group: root
+    mode: '0664'

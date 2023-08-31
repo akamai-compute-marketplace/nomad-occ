@@ -1,0 +1,18 @@
+# linode nomad ansible playbook
+
+# linodes
+- name: configure nomad cluster
+  hosts: all
+  any_errors_fatal: true
+  user: root
+  vars:
+    local_home: "{{ lookup('env','HOME') }}"
+  vars_files:
+    - group_vars/nomad/vars
+    - group_vars/nomad/secret_vars
+  
+  roles:
+    - common
+    - consul
+    - nomad
+    - post

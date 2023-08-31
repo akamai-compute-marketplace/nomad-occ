@@ -1,0 +1,11 @@
+wheel==0.38.4
+linode-api4==5.7.0
+ansible==6.6.0
+passlib==1.7.4
+polling==0.3.2
+yamllint==1.26.2
+flake8==3.9.2
+ansible-lint==6.1.0
+ansible-specdoc==0.0.14
+pyyaml==6.0.1
+dnspython==2.4.2
