@@ -11,8 +11,7 @@
 
 # diee. debug
 - name: stopping further execution
-  fail:
-    msg: "Stopping execution for manual testing"
+  meta: end_play
   run_once: true
   delegate_to: "localhost"
 
