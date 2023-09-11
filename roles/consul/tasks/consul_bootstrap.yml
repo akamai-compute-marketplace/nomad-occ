@@ -1,15 +1,4 @@
 ---
-# only wait on this node
-
-# removing wait
-#- name: wait for cluster to elect leader
-#  ansible.builtin.pause:
-#    minutes: 2
-#  run_once: true
-#  delegate_to: "localhost"   
-
-# do an until
-
 - name: bootstrap consul 
   ansible.builtin.shell: consul acl bootstrap
   register: result

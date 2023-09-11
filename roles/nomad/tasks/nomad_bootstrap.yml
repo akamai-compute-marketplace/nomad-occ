@@ -1,11 +1,4 @@
 ---
-#remove 
-#- name: wait for nomad to elect leader
-#  ansible.builtin.pause: 
-#    minutes: 2
-#  run_once: true
-#  delegate_to: localhost
-
 - name: bootstrap nomad
   ansible.builtin.shell: nomad acl bootstrap
   register: result
