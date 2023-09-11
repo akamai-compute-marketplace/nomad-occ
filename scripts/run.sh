@@ -96,7 +96,7 @@ function ansible:deploy {
   # deploy nomad clients
   echo "[info] configuring nomad clients"
   CLUSTER_MODE='client'
-  cd nomad-client-occ_share
+  cd nomad-client-occ
   cp ../${VARS_PATH} ${VARS_PATH}
   cp ../${SECRET_VARS_PATH} ${SECRET_VARS_PATH}
   cp ../hosts ./hosts
