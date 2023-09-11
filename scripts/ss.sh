@@ -13,10 +13,9 @@ trap "cleanup $? $LINENO" EXIT
 # <UDF name="clients" label="Nomad client size" default="3" oneof="3" />
 
 # git repo
-git_username="n0vabyte"
-export GIT_PAT=""
-export GIT_REPO_1="https://$git_username:${GIT_PAT}@github.com/$git_username/nomad-occ_share.git"
-export GIT_REPO_2="https://$git_username:${GIT_PAT}@github.com/$git_username/nomad-client-occ_share.git"
+git_username="akamai-compute-marketplace"
+export GIT_REPO_1="https://github.com/$git_username/nomad-occ.git"
+export GIT_REPO_2="https://github.com/$git_username/nomad-client-occ.git"
 export DEBIAN_FRONTEND=non-interactive
 export UUID=$(uuidgen | awk -F - '{print $1}')
 export CLUSTER_MODE='cluster'
@@ -28,16 +27,14 @@ source <ssinclude StackScriptID=1>
 
 function cleanup {
   if [ "$?" != "0" ] || [ "$SUCCESS" == "true" ]; then
-    #deactivate
-#    cd ${HOME}
-#    if [ -d "/tmp/linode" ]; then
-#      rm -rf /tmp/linode
-#    fi
-#    if [ -d "/usr/local/bin/run" ]; then
-#      rm /usr/local/bin/run
-#    fi
-#    stackscript_cleanup
-  echo "fake delete.."
+    cd ${HOME}
+    if [ -d "/tmp/linode" ]; then
+      rm -rf /tmp/linode
+    fi
+    if [ -d "/usr/local/bin/run" ]; then
+      rm /usr/local/bin/run
+    fi
+    stackscript_cleanup
   fi
 }
 function add_privateip {
@@ -105,6 +102,7 @@ function setup {
   git clone ${GIT_REPO_2} /tmp/linode/nomad-client-occ_share
   # clone one branch to test 
   # git clone -b develop ${GIT_REPO_1} /tmp/linode
+  # git clone -b develop ${GIT_REPO_2} /tmp/linode/nomad-client-occ_share
   cd /tmp/linode
   pip3 install virtualenv
   python3 -m virtualenv env
