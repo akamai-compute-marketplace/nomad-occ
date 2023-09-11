@@ -3,15 +3,9 @@
 
 - name: adding sudo user
   import_tasks: sudouser.yml
-  tags: 
-    - C1
 
 - name: add user ssh keys
   import_tasks: sshkeys.yml
-  tags: 
-    - C1
 
 - name: dumping credentials locally
   import_tasks: creds.yml
-  tags: 
-    - C1

@@ -2,8 +2,9 @@ data_dir = "/opt/consul/data"
 bind_addr = "0.0.0.0"
 client_addr = "0.0.0.0"
 # advertise_addr = "{{ nomad_data.server[0].instance.ip_priv1 }}"
-
 bootstrap_expect = {{ servers }}
+log_level = "INFO"
+server = true
 
 acl {
     enabled = true
@@ -11,15 +12,12 @@ acl {
     down_policy = "extend-cache"
 }
 
-log_level = "INFO"
-
-server = true
 {% if ansible_hostname ==  nomad_data.server[0].instance.hostname %} 
 ui = true
 {$ elif ansible_hostname !=  nomad_data.server[0].instance.hostname %}
 ui = false
 {% endif %}
-retry_join = ["provider=linode api_token={{ api_token }} region={{ region }}"]
+retry_join = ["provider=linode api_token={{ api_token }} region={{ region }} tag_name=consul-server"]
 
 service {
     name = "consul"

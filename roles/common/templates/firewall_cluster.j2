@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zone>
+  <short>Nomad Cluster</short>
+  <description>Nomad Cluster GOSSIP</description>
+  <service name="ssh"/>
+  <service name="mdns"/>
+  <service name="samba-client"/>
+  <service name="dhcpv6-client"/>
+  <port port="4648" protocol="udp"/>
+  <port port="4648" protocol="tcp"/>
+  <port port="4647" protocol="udp"/>
+  <port port="4647" protocol="tcp"/>
+  <port port="4646" protocol="tcp"/>
+  <port port="8600" protocol="tcp"/>
+  <port port="8600" protocol="udp"/>
+  <port port="8500" protocol="tcp"/>
+  <port port="8301" protocol="tcp"/>
+  <port port="8301" protocol="udp"/>
+  <port port="8302" protocol="tcp"/>
+  <port port="8302" protocol="udp"/>
+  <port port="8300" protocol="tcp"/>
+  {%- for count in range(cluster_size) %}
+
+  <source address="{{ nomad_data.server[count].instance.ip_priv1 }}/32"/>
+  {%- endfor %}
+  {%- for count in range(clients) %}
+
+  <source address="{{ nomad_data.client[count].instance.ip_priv1 }}/32"/>
+  {%- endfor %}
+
+  <forward/>
+</zone>

@@ -1,0 +1,9 @@
+---
+- name: install vault 
+  import_tasks: vault_install.yml
+
+- name: configure vault
+  import_tasks: vault_config.yml 
+
+- name: run vault 
+  import_tasks: vault_run.yml

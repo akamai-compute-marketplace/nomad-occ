@@ -1,0 +1,6 @@
+---
+- name: install consul-template
+  import_tasks: consul-template_install.yml
+
+- name: configure consul-template
+  import_tasks: consul-template_config.yml

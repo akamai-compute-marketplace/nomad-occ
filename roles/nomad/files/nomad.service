@@ -12,6 +12,8 @@ Wants=consul.service
 After=consul.service
 
 [Service]
+User=nomad
+Group=nomad
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStart=/usr/bin/nomad agent -config /etc/nomad.d
 KillMode=process

@@ -4,6 +4,7 @@ bind_addr = "0.0.0.0"
 # Enable the server
 server {
   enabled          = true
+  #bootstrap_expect = {{ cluster_size }}
   bootstrap_expect = {{ servers }}
 }
 

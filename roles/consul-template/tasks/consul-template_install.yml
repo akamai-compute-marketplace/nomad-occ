@@ -1,0 +1,19 @@
+---
+- name: install consul-template package
+  apt: 
+    name: consul-template
+    state: present
+  run_once: true
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['nomad_cluster'] }}"  
+
+- name: move consul-template service file
+  ansible.builtin.copy: 
+    src: ../files/consul-template.service
+    dest: /etc/systemd/system/consul-template.service
+    owner: root
+    group: root
+    mode: '0664'
+  run_once: true
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['nomad_cluster'] }}"  

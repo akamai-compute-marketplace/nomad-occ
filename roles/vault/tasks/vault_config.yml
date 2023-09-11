@@ -1,0 +1,15 @@
+---
+- name: creating vault config dir
+  file: 
+    path: /etc/vault.d
+    state: directory 
+    mode: '0755'
+
+- name: moving vault.hcl
+  template: 
+    src: ../templates/vault.hcl.j2
+    dest: /etc/vault.d/vault.hcl
+    owner: root
+    group: root
+    mode: '0755'
+# for v3, use ansible_facts to specify private address instead of 2nd ipv4 in template
