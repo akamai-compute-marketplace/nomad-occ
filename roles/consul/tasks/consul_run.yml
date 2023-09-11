@@ -8,13 +8,6 @@
   loop: "{{ groups['nomad_client'] }}"
   when: cluster_mode == 'client'
 
-
-# diee. debug
-- name: stopping further execution
-  meta: end_play
-  run_once: true
-  delegate_to: "localhost"
-
 - name: start and enable consul service
   systemd: 
     name: consul
