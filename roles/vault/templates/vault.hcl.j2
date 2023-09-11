@@ -1,0 +1,18 @@
+{% if ansible_hostname ==  nomad_data.results[0].instance.hostname %} 
+ui = true
+{$ elif ansible_hostname !=  nomad_data.results[0].instance.hostname %}
+ui = false
+{% endif %}
+
+backend "consul" {
+  path          = "vault/"
+  address       = "{{ ansible_all_ipv4_addresses[1] }}:8500"
+  cluster_addr  = "https://{{ ansible_all_ipv4_addresses[1] }}:8201"
+  redirect_addr = "http://{{ ansible_all_ipv4_addresses[1] }}:8200"
+}
+
+listener "tcp" {
+  address         = "0.0.0.0:8200"
+  cluster_address = "{{ ansible_all_ipv4_addresses[1] }}:8201"
+  tls_disable     = 1
+}

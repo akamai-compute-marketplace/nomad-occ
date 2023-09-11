@@ -10,11 +10,13 @@ trap "cleanup $? $LINENO" EXIT
 # <UDF name="add_ssh_keys" label="Add Account SSH Keys to All Nodes?" oneof="yes,no"  default="yes" />
 # <UDF name="cluster_size" label="Total instance count" default="6" oneof="6" />
 # <UDF name="servers" label="Nomad Server count" default="3" oneOf="3" />
-# <UDF name="clients" label="Nomad Client count" default="3" oneof="3" />
+# <UDF name="clients" label="Nomad client size" default="3" oneof="3" />
 
 # git repo
-export GIT_REPO_1="https://github.com/akamai-compute-marketplace/nomad-occ.git"
-export GIT_REPO_2="https://github.com/akamai-compute-marketplace/nomad-client-occ.git"
+git_username="n0vabyte"
+export GIT_PAT=""
+export GIT_REPO_1="https://$git_username:${GIT_PAT}@github.com/$git_username/nomad-occ_share.git"
+export GIT_REPO_2="https://$git_username:${GIT_PAT}@github.com/$git_username/nomad-client-occ_share.git"
 export DEBIAN_FRONTEND=non-interactive
 export UUID=$(uuidgen | awk -F - '{print $1}')
 export CLUSTER_MODE='cluster'
@@ -26,14 +28,16 @@ source <ssinclude StackScriptID=1>
 
 function cleanup {
   if [ "$?" != "0" ] || [ "$SUCCESS" == "true" ]; then
-    cd ${HOME}
-    if [ -d "/tmp/linode" ]; then
-      rm -rf /tmp/linode
-    fi
-    if [ -d "/usr/local/bin/run" ]; then
-      rm /usr/local/bin/run
-    fi
-    stackscript_cleanup
+    #deactivate
+#    cd ${HOME}
+#    if [ -d "/tmp/linode" ]; then
+#      rm -rf /tmp/linode
+#    fi
+#    if [ -d "/usr/local/bin/run" ]; then
+#      rm /usr/local/bin/run
+#    fi
+#    stackscript_cleanup
+  echo "fake delete.."
   fi
 }
 function add_privateip {
@@ -74,6 +78,14 @@ function rename_provisioner {
       }" \
       https://api.linode.com/v4/linode/instances/${LINODE_ID}
 }
+function tag_provisioner {
+  export INSTANCE_TAG='consul-server'
+  echo "[info] tagging the provisioner"
+  curl -s -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${TOKEN_PASSWORD}" -X PUT \
+    -d "{\"tags\": [\"${INSTANCE_TAG}\"]}" \
+    https://api.linode.com/v4/linode/instances/${LINODE_ID}   
+}
 
 function setup {
   # install dependencies
@@ -82,6 +94,7 @@ function setup {
   apt-get install -y jq git python3 python3-pip python3-dev build-essential firewalld
   # add private IP address
   rename_provisioner
+  tag_provisioner
   configure_privateip  
   # write authorized_keys file
   if [ "${ADD_SSH_KEYS}" == "yes" ]; then
@@ -92,7 +105,6 @@ function setup {
   git clone ${GIT_REPO_2} /tmp/linode/nomad-client-occ_share
   # clone one branch to test 
   # git clone -b develop ${GIT_REPO_1} /tmp/linode
-  # git clone -b develop ${GIT_REPO_2} /tmp/linode/nomad-client-occ_share
   cd /tmp/linode
   pip3 install virtualenv
   python3 -m virtualenv env

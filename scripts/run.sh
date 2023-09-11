@@ -96,12 +96,12 @@ function ansible:deploy {
   # deploy nomad clients
   echo "[info] configuring nomad clients"
   CLUSTER_MODE='client'
-  cd /tmp/linode/nomad-client-occ_share
+  cd nomad-client-occ_share
   cp ../${VARS_PATH} ${VARS_PATH}
   cp ../${SECRET_VARS_PATH} ${SECRET_VARS_PATH}
   cp ../hosts ./hosts
   cp ../.vault-pass .
-  ansible-playbook -i hosts site.yml -vvv --extra-vars "root_password=${ROOT_PASS} add_keys_prompt=${ADD_SSH_KEYS} cluster_mode='${CLUSTER_MODE}' --tags cluster"
+  ansible-playbook -i hosts site.yml -vvv --extra-vars "root_password=${ROOT_PASS} add_keys_prompt=${ADD_SSH_KEYS} cluster_mode='${CLUSTER_MODE}' is_provisioner='false' --tags cluster"
 }
 
 function test:deploy {

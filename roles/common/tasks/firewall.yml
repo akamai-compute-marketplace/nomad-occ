@@ -20,6 +20,16 @@
     group: root
     mode: 0664
 
+- name: allow http and https on primary nomad server
+  ansible.builtin.copy:
+    src: files/public.xml
+    dest: /etc/firewalld/zones/public.xml
+    owner: root
+    group: root
+    mode: 0664
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"
+
 - name: restart firewalld
   systemd:
     name: firewalld

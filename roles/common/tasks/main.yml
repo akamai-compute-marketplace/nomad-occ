@@ -51,6 +51,7 @@
     - gnupg2
     - ssl-cert
     - python3-passlib
+    #- firewalld
     state: present
 
 - name: configure firewalld

@@ -28,7 +28,7 @@
 
 - name: move systemd service files
   ansible.builtin.copy: 
-    src: ../files/consul.service
+    src: files/consul.service
     dest: /etc/systemd/system/consul.service 
     owner: root
     group: root

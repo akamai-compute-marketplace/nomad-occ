@@ -1,0 +1,19 @@
+---
+- name: creating vault data dir
+  file:
+    path: /opt/vault
+    state: directory
+    mode: '0755'
+
+- name: install vault
+  apt: 
+    name: vault
+    state: present
+
+- name: move vault service file
+  ansible.builtin.copy: 
+    src: ../files/vault.service
+    dest: /etc/systemd/system/vault.service 
+    owner: root
+    group: root
+    mode: '0664'
