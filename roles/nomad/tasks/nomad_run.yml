@@ -1,5 +1,6 @@
 ---
 # start service on cluster when cluster_mode is cluster
+
 - name: systemd daemon reload
   systemd: 
     daemon_reload: yes
@@ -17,6 +18,7 @@
   when: cluster_mode == 'client'    
 
 # start service on cluster when cluster_mode is cluster
+
 - name: systemd daemon reload
   systemd: 
     daemon_reload: yes

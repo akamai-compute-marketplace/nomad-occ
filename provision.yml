@@ -21,8 +21,9 @@
       root_pass: '{{ root_pass }}'
       authorized_keys: '{{ ssh_keys }}'
       private_ip: true
-      stackscript_id: '1226546' 
+#      stackscript_id: 
       ua_prefix: 'markeplace-nomad-occ'      
+      tags: 'consul-server'
       state: present
     with_sequence: count='{{ count }}'
 
@@ -36,8 +37,9 @@
       root_pass: '{{ root_pass }}'
       authorized_keys: '{{ ssh_keys }}'
       private_ip: true
-      stackscript_id: '1226546'
+#      stackscript_id: 
       ua_prefix: 'markeplace-nomad-occ'      
+      tags: 'consul-server'
       state: present
     with_sequence: count='{{ clients }}'
 

@@ -1,16 +1,15 @@
 [Unit]
-Description=Consul Agent
+Description=Consul Template Agent
 Requires=network-online.target
 After=network-online.target
 
 [Service]
-User=consul
-Group=consul
 Restart=on-failure
-Environment=CONSUL_ALLOW_PRIVILEGED_PORTS=true
-ExecStart=/usr/bin/consul agent -config-dir="/etc/consul.d" -recursor="172.0.0.53"
+ExecStart=/usr/bin/consul-template -config="/etc/consul-template.d/consul-template.hcl"
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
+User=root
+Group=root
 
 [Install]
 WantedBy=multi-user.target

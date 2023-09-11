@@ -6,10 +6,10 @@
     mode: '0644'
     force: true
 
-- name: Add Docker repo
+- name: Add HashiCorp repo
   ansible.builtin.apt_repository:
-    filename: example-repo
-    repo: 'deb [signed-by=/etc/apt/trusted.gpg.d/hashicorp.gpg.asc] https://apt.releases.hashicorp.com/gpg jammy main'
+    filename: hashicorp
+    repo: 'deb [signed-by=/etc/apt/trusted.gpg.d/hashicorp.gpg.asc] https://apt.releases.hashicorp.com jammy main'
 
 - name: update repos 
   apt:
@@ -28,7 +28,7 @@
 
 - name: move systemd service files
   ansible.builtin.copy: 
-    src: ../files/consul.service
+    src: files/consul.service
     dest: /etc/systemd/system/consul.service 
     owner: root
     group: root
