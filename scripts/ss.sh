@@ -99,10 +99,10 @@ function setup {
   fi
   # clone repo and set up ansible environment
   git clone ${GIT_REPO_1} /tmp/linode
-  git clone ${GIT_REPO_2} /tmp/linode/nomad-client-occ_share
+  git clone ${GIT_REPO_2} /tmp/linode/nomad-client-occ
   # clone one branch to test 
   # git clone -b develop ${GIT_REPO_1} /tmp/linode
-  # git clone -b develop ${GIT_REPO_2} /tmp/linode/nomad-client-occ_share
+  # git clone -b develop ${GIT_REPO_2} /tmp/linode/nomad-client-occ
   cd /tmp/linode
   pip3 install virtualenv
   python3 -m virtualenv env
