@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-#trap "cleanup $? $LINENO" EXIT
+trap "cleanup $? $LINENO" EXIT
 
 ## Deployment Variables
 # <UDF name="token_password" label="Your Linode API token" />

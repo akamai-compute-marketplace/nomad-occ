@@ -8,7 +8,7 @@
 
 - name: Add HashiCorp repo
   ansible.builtin.apt_repository:
-    filename: hashicorp
+    filename: HashiCorp
     repo: 'deb [signed-by=/etc/apt/trusted.gpg.d/hashicorp.gpg.asc] https://apt.releases.hashicorp.com jammy main'
 
 - name: update repos 
