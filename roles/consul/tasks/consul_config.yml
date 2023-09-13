@@ -14,7 +14,9 @@
     mode: '0755'
   run_once: true
   delegate_to: "{{ item }}"
-  loop: "{{ groups['nomad_cluster'] }}"  
+  loop: "{{ groups['nomad_cluster'] }}"
+  loop_control:
+    index_var: count
 
 - name: create ACL dir
   ansible.builtin.file: 
