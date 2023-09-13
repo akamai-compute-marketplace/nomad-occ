@@ -1,7 +1,7 @@
 data_dir = "/opt/consul/data"
 bind_addr = "0.0.0.0"
 client_addr = "0.0.0.0"
-# advertise_addr = "{{ nomad_data.server[0].instance.ip_priv1 }}"
+advertise_addr = "{{ nomad_data.server[count].instance.ip_priv1 }}"
 bootstrap_expect = {{ servers }}
 log_level = "INFO"
 server = true
