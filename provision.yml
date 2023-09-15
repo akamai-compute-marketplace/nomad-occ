@@ -82,9 +82,9 @@
             {%- endfor %}
 
 # force fail to test destroy
-  - name: failing and triggering destroy
-    fail:
-      msg: "Force failing to trigger destroy task"
+#  - name: failing and triggering destroy
+#    fail:
+#      msg: "Force failing to trigger destroy task"
 
   - name: test connectivity
     ping: 
