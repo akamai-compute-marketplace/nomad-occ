@@ -23,7 +23,7 @@ function destroy {
   if [ -n "${DISTRO}" ] && [ -n "${DATE}" ]; then
     ansible-playbook destroy.yml --extra-vars "instance_prefix=${DISTRO}-${DATE}"
   else
-    ansible-playbook destroy.yml
+    ansible-playbook /tmp/linode/nomad-occ/destroy.yml
   fi
 }
 
