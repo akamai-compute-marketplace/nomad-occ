@@ -21,9 +21,9 @@ readonly VARS_PATH="./group_vars/nomad/vars"
 # utility functions
 function destroy {
   if [ -n "${DISTRO}" ] && [ -n "${DATE}" ]; then
-    ansible-playbook destroy.yml --extra-vars "instance_prefix=${DISTRO}-${DATE}"
+    ansible-playbook /tmp/linode/destroy.yml --extra-vars "instance_prefix=${DISTRO}-${DATE}"
   else
-    ansible-playbook destroy.yml
+    ansible-playbook /tmp/linode/destroy.yml
   fi
 }
 
