@@ -81,11 +81,6 @@
                 ip_priv1: {{ client_info.results[count].instance.ipv4[1] }}
             {%- endfor %}
 
-# force fail to test destroy
-#  - name: failing and triggering destroy
-#    fail:
-#      msg: "Force failing to trigger destroy task"
-
   - name: test connectivity
     ping: 
     with_items: "{{ item.instance.ipv4[0] }}"
