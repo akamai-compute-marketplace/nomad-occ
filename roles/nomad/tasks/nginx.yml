@@ -58,15 +58,27 @@
   run_once: true
   delegate_to: "{{ groups['nomad_cluster'][0] }}"
 
-# run dry run. If good, then proceed
-
-- name: run certbot
+# allow propagation
+- name: run certbot dry-run
   shell:
-    #cmd: "certbot -n --nginx --agree-tos --redirect -d {{ rdns }} -m {{ email_address }}"
-    cmd: certbot certonly -n --webroot --dry-run --agree-tos --redirect -d {{ rdns }} -m {{ email_address }} -w /var/www/html
+    cmd: "certbot certonly -n --webroot --dry-run --agree-tos --redirect -d {{ rdns }} -m {{ email_address }} -w /var/www/html"
+  run_once: true
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"
+  register: dry_run
+  until: dry_run is not failed
+  retries: 3
+  delay: 3
+  ignore_errors: true
+
+- name: validate certbot dry-run
+  assert:
+    that: dry_run is not failed
+    fail_msg: "[Error] Certbot dry-run failed. Cannot continue..Check the domain provided"
+    success_msg: "[Info] Certbot dry-run successful!"
   run_once: true
   delegate_to: "{{ groups['nomad_cluster'][0] }}"
 
+# issue cert
 - name: run certbot
   shell:
     cmd: "certbot -n --nginx --agree-tos --redirect -d {{ rdns }} -m {{ email_address }}"
