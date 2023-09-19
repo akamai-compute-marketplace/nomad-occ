@@ -65,7 +65,7 @@
     #cmd: "certbot -n --nginx --agree-tos --redirect -d {{ rdns }} -m {{ email_address }}"
     cmd: certbot certonly -n --webroot --dry-run --agree-tos --redirect -d {{ rdns }} -m {{ email_address }} -w /var/www/html
   run_once: true
-  delegate_to: "{{ groups['nomad_cluster'][0] }}
+  delegate_to: "{{ groups['nomad_cluster'][0] }}"
 
 - name: run certbot
   shell:
