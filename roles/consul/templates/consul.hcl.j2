@@ -17,7 +17,7 @@ ui = true
 {$ elif ansible_hostname !=  nomad_data.server[0].instance.hostname %}
 ui = false
 {% endif %}
-retry_join = ["provider=linode api_token={{ api_token }} region={{ region }} tag_name=consul-server"]
+retry_join = ["provider=linode api_token={{ api_token }} region={{ region }} tag_name={{ uuid }}"]
 
 service {
     name = "consul"

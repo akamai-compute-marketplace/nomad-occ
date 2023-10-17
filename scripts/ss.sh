@@ -76,11 +76,11 @@ function rename_provisioner {
       https://api.linode.com/v4/linode/instances/${LINODE_ID}
 }
 function tag_provisioner {
-  export INSTANCE_TAG='consul-server'
+#  export INSTANCE_TAG='consul-server'
   echo "[info] tagging the provisioner"
   curl -s -H "Content-Type: application/json" \
     -H "Authorization: Bearer ${TOKEN_PASSWORD}" -X PUT \
-    -d "{\"tags\": [\"${INSTANCE_TAG}\"]}" \
+    -d "{\"tags\": [\"${UUID}\"]}" \
     https://api.linode.com/v4/linode/instances/${LINODE_ID}   
 }
 

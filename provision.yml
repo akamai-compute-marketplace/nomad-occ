@@ -22,8 +22,13 @@
       authorized_keys: '{{ ssh_keys }}'
       private_ip: true
       stackscript_id: '1226546'
+<<<<<<< Updated upstream
       ua_prefix: 'marketplace-nomad-occ'      
       tags: 'consul-server'
+=======
+      ua_prefix: 'markeplace-nomad-occ'      
+      tags: '{{ uuid }}'
+>>>>>>> Stashed changes
       state: present
     with_sequence: count='{{ count }}'
 
@@ -38,8 +43,13 @@
       authorized_keys: '{{ ssh_keys }}'
       private_ip: true
       stackscript_id: '1226547'
+<<<<<<< Updated upstream
       ua_prefix: 'marketplace-nomad-occ'      
       tags: 'consul-server'
+=======
+      ua_prefix: 'markeplace-nomad-occ'      
+      tags: '{{ uuid }}'
+>>>>>>> Stashed changes
       state: present
     with_sequence: count='{{ clients }}'
 
