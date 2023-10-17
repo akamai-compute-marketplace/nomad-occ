@@ -73,7 +73,6 @@ function ansible:build {
   type: ${LINODE_PARAMS[0]}
   region: ${LINODE_PARAMS[1]}
   image: ${LINODE_PARAMS[2]}
-  linode_tags: ${TAGS}
   uuid: ${UUID}
   cluster_mode: ${CLUSTER_MODE}
   # sudo user
