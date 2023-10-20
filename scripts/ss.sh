@@ -19,6 +19,8 @@ export GIT_REPO_2="https://github.com/$git_username/nomad-client-occ.git"
 export DEBIAN_FRONTEND=non-interactive
 export UUID=$(uuidgen | awk -F - '{print $1}')
 export CLUSTER_MODE='cluster'
+# test to capture region in api 
+export REGION=($(curl -sH "Authorization: Bearer ${TOKEN_PASSWORD}" "https://api.linode.com/v4/linode/instances/${LINODE_ID}" | jq -r .region))
 
 # enable logging
 exec > >(tee /dev/ttyS0 /var/log/stackscript.log) 2>&1
@@ -79,7 +81,7 @@ function tag_provisioner {
   echo "[info] tagging the provisioner"
   curl -s -H "Content-Type: application/json" \
     -H "Authorization: Bearer ${TOKEN_PASSWORD}" -X PUT \
-    -d "{\"tags\": [\"${UUID}\"]}" \
+    -d "{\"tags\": [\"${UUID}-${REGION}\"]}" \
     https://api.linode.com/v4/linode/instances/${LINODE_ID}   
 }
 
