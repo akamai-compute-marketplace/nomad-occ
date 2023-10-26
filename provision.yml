@@ -23,7 +23,7 @@
       private_ip: true
       stackscript_id: '1226546'
       ua_prefix: 'marketplace-nomad-occ'      
-      tags: 'consul-server'
+      tags: '{{ cluster_uuid }}'
       state: present
     with_sequence: count='{{ count }}'
 
@@ -39,7 +39,7 @@
       private_ip: true
       stackscript_id: '1226547'
       ua_prefix: 'marketplace-nomad-occ'      
-      tags: 'consul-server'
+      tags: '{{ cluster_uuid }}'
       state: present
     with_sequence: count='{{ clients }}'
 
