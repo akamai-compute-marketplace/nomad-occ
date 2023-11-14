@@ -75,12 +75,14 @@ function rename_provisioner {
       }" \
       https://api.linode.com/v4/linode/instances/${LINODE_ID}
 }
+
 function tag_provisioner {
-  export INSTANCE_TAG='consul-server'
   echo "[info] tagging the provisioner"
+  REGION=$(curl -sH "Authorization: Bearer ${TOKEN_PASSWORD}" "https://api.linode.com/v4/linode/instances/${LINODE_ID}" | jq -r .region)
+  export REGION="${REGION}"
   curl -s -H "Content-Type: application/json" \
     -H "Authorization: Bearer ${TOKEN_PASSWORD}" -X PUT \
-    -d "{\"tags\": [\"${INSTANCE_TAG}\"]}" \
+    -d "{\"tags\": [\"${UUID}-${REGION}\"]}" \ \
     https://api.linode.com/v4/linode/instances/${LINODE_ID}   
 }
 

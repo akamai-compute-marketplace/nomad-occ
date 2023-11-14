@@ -14,6 +14,9 @@
       user: {{ sudo_username }}
       password: {{ sudo_username_pass }}
       
+      # cluster tag 
+      cluster_uuid: {{ cluster_uuid }}
+      
       # hashi tokens 
       consul_bootstrap_token: {{ consul_bootstrap_token[0] }}
       consul_nomad_autojoin_token: {{ consul_nomad_autojoin_token[0] }}
