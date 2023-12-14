@@ -91,7 +91,7 @@ function ansible:deploy {
   local SECRET_VARS_PATH="./group_vars/nomad/secret_vars"
 
   ansible-playbook -v provision.yml
-  ansible-playbook -v -i hosts site.yml -v --extra-vars "root_password=${ROOT_PASS} add_keys_prompt=${ADD_SSH_KEYS}"
+  ansible-playbook -i hosts site.yml -v --extra-vars "root_password=${ROOT_PASS} add_keys_prompt=${ADD_SSH_KEYS}"
 
   # deploy nomad clients
   echo "[info] configuring nomad clients"
