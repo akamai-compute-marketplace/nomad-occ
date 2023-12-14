@@ -90,8 +90,8 @@ EOF
 function ansible:deploy {
   local SECRET_VARS_PATH="./group_vars/nomad/secret_vars"
 
-  ansible-playbook -vvv provision.yml
-  ansible-playbook -vvv -i hosts site.yml -vvv --extra-vars "root_password=${ROOT_PASS} add_keys_prompt=${ADD_SSH_KEYS}"
+  ansible-playbook -v provision.yml
+  ansible-playbook -v -i hosts site.yml -v --extra-vars "root_password=${ROOT_PASS} add_keys_prompt=${ADD_SSH_KEYS}"
 
   # deploy nomad clients
   echo "[info] configuring nomad clients"
@@ -101,7 +101,7 @@ function ansible:deploy {
   cp ../${SECRET_VARS_PATH} ${SECRET_VARS_PATH}
   cp ../hosts ./hosts
   cp ../.vault-pass .
-  ansible-playbook -i hosts site.yml -vvv --extra-vars "root_password=${ROOT_PASS} add_keys_prompt=${ADD_SSH_KEYS} cluster_mode='${CLUSTER_MODE}' is_provisioner='false' --tags cluster"
+  ansible-playbook -i hosts site.yml -v --extra-vars "root_password=${ROOT_PASS} add_keys_prompt=${ADD_SSH_KEYS} cluster_mode='${CLUSTER_MODE}' is_provisioner='false' --tags cluster"
 }
 
 function test:deploy {
